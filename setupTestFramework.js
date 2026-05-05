@@ -16,7 +16,16 @@ window.URL.createObjectURL = jest.fn();
 
 // jsdom doesn't expose these globals; react-dom/server (and friends) need them.
 if (typeof globalThis.MessageChannel === 'undefined') {
-  globalThis.MessageChannel = MessageChannel;
+  // Node's MessageChannel keeps the event loop alive, which makes Jest hang
+  // after each suite. Unref both ports so they don't block process exit.
+  class UnrefMessageChannel extends MessageChannel {
+    constructor() {
+      super();
+      this.port1.unref?.();
+      this.port2.unref?.();
+    }
+  }
+  globalThis.MessageChannel = UnrefMessageChannel;
 }
 if (typeof globalThis.TextEncoder === 'undefined') {
   globalThis.TextEncoder = TextEncoder;
