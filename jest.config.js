@@ -1,7 +1,4 @@
 module.exports = {
-  // React 18's scheduler creates MessageChannels at module init that Jest's
-  // open-handle detector flags as leaks. Force exit so CI doesn't wait on them.
-  forceExit: true,
   setupFilesAfterEnv: ['<rootDir>/setupTestFramework.js'],
   moduleNameMapper: {
     'decap-cms-lib-auth': '<rootDir>/packages/decap-cms-lib-auth/src/index.js',
